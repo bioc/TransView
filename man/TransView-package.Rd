@@ -4,39 +4,39 @@
 \alias{TransView}
 \docType{package}
 \title{
-The TransView package: Construction and visualisation of read density maps.
+Read density map construction and accession. Visualization of
+ChIPSeq and RNASeq data sets.
 }
 \description{
-This package provides efficient tools to generate, access and display 
-             read densities of sequencing based data sets such as from RNA-Seq and ChIP-Seq.  
+This package provides efficient tools to generate, access and 
+	     display read densities of sequencing based data sets such as from 
+	     RNA-Seq and ChIP-Seq.   
 }
 \details{
 \tabular{ll}{
 Package: \tab TransView\cr
 Type: \tab Package\cr
-Version: \tab 1.1.0\cr
+Version: \tab 1.0.0\cr
 URL: \tab http://bioconductor.org/packages/release/bioc/html/TransView.html\cr
 License: \tab GPL-3\cr
 LazyLoad: \tab yes\cr
 Depends: \tab methods,GenomicRanges\cr
 Imports: \tab Rsamtools,zlibbioc,gplots,IRanges\cr
-Suggests: \tab RUnit\cr
-biocViews: \tab 
-Bioinformatics,DNAMethylation,GeneExpression,Transcription,Microarray,
-Sequencing,HighThroughputSequencing,ChIPseq,RNAseq,Methylseq,DataImport,
-Visualization,Clustering,MultipleComparisons\cr
+Suggests: \tab RUnit,pasillaBamSubset\cr
+biocViews: \tab Bioinformatics,DNAMethylation,GeneExpression,Transcription,
+Microarray,Sequencing,HighThroughputSequencing,ChIPseq,RNAseq,
+Methylseq,DataImport,Visualization,Clustering,MultipleComparisons\cr
 LinkingTo: \tab Rsamtools\cr
-Packaged: \tab 2012-09-23 17:29:16 UTC; eg1\cr
-Built: \tab R 2.15.1; x86_64-pc-linux-gnu; 2012-09-24 02:30:31 UTC; unix\cr
+Packaged: \tab 2012-10-03 14:35:55 UTC\cr
+Built: \tab R 2.15.0; x86_64-pc-linux-gnu; 2012-10-03 14:36:43 UTC; unix\cr
 }
 
 Index:
 \preformatted{
 DensityContainer-class
                         Class '"DensityContainer"'
-TransView-package       The TransView package: Construction of read
-                        density maps. Visualisation of ChIPSeq and
-                        RNASeq data.
+TransView-package       The TransView package: Construction and
+                        visualisation of read density maps.
 annotatePeaks           Associates peaks to TSS
 gtf2gr                  GTF file parsing
 histogram-methods       Histogram of the read distribution
