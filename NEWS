@@ -1,4 +1,12 @@
 
+CHANGES IN VERSION 1.0.1
+------------------------
+
+BUG FIXES
+
+    o Fixed a bug which resulted in wrong density maps of overlapping regions from sliceN.
+
+
 CHANGES IN VERSION 1.0.0
 ------------------------
 
