@@ -16,7 +16,7 @@ This package provides efficient tools to generate, access and
 \tabular{ll}{
 Package: \tab TransView\cr
 Type: \tab Package\cr
-Version: \tab 1.0.0\cr
+Version: \tab 1.0.2\cr
 URL: \tab http://bioconductor.org/packages/release/bioc/html/TransView.html\cr
 License: \tab GPL-3\cr
 LazyLoad: \tab yes\cr
@@ -27,8 +27,6 @@ biocViews: \tab Bioinformatics,DNAMethylation,GeneExpression,Transcription,
 Microarray,Sequencing,HighThroughputSequencing,ChIPseq,RNAseq,
 Methylseq,DataImport,Visualization,Clustering,MultipleComparisons\cr
 LinkingTo: \tab Rsamtools\cr
-Packaged: \tab 2012-10-03 14:35:55 UTC\cr
-Built: \tab R 2.15.0; x86_64-pc-linux-gnu; 2012-10-03 14:36:43 UTC; unix\cr
 }
 
 Index:
