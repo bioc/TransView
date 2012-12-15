@@ -93,6 +93,7 @@ plotTV<-function ( ..., regions, gtf=NA, scale="global", cluster="none", control
 			regions$transcript_id<-as.character(regions$transcript_id)
 			ttlRNA<-c(ttlRNA,ex_name(arg))
 		}else{
+			if(class(regions)[1]!="GRanges")stop("If non spliced DensityContainer are passed, regions must be of class 'GRanges'")
 			tcvg <- c(tcvg, ifelse(norm_readc,fmapmass(arg),1))
 			ttl<-c(ttl,ex_name(arg))
 		}
