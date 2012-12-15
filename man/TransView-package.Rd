@@ -16,7 +16,7 @@ This package provides efficient tools to generate, access and
 \tabular{ll}{
 Package: \tab TransView\cr
 Type: \tab Package\cr
-Version: \tab 1.0.2\cr
+Version: \tab 1.0.4\cr
 URL: \tab http://bioconductor.org/packages/release/bioc/html/TransView.html\cr
 License: \tab GPL-3\cr
 LazyLoad: \tab yes\cr

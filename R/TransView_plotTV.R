@@ -87,13 +87,13 @@ plotTV<-function ( ..., regions, gtf=NA, scale="global", cluster="none", control
 			}else stop("Data sets must be of any number of class 'DensityContainer' and maximally one matrix")
 		} 
 		if(spliced(arg)){
-			if(class(gtf)[1]!="GRanges")stop("Expression data detected but no GTF found! Please re-run with gtf2gr")
+			if(class(regions)[1]!="data.frame")stop("Expression data detected but no GTF found! Please re-run with gtf2gr")
 			rcvg <- c(rcvg, ifelse(norm_readc,fmapmass(arg),1))
 			if(!any(colnames(regions) %in% "transcript_id"))stop("'transcript_id' column is missing in regions. RNA-Seq can not be associated to regions.")
 			regions$transcript_id<-as.character(regions$transcript_id)
 			ttlRNA<-c(ttlRNA,ex_name(arg))
 		}else{
-			if(class(regions)[1]!="GRanges")stop("If non spliced DensityContainer are passed, regions must be of class 'GRanges'")
+			if(class(regions)[1]!="data.frame")stop("If non spliced DensityContainer are passed, regions must be of class 'GRanges'")
 			tcvg <- c(tcvg, ifelse(norm_readc,fmapmass(arg),1))
 			ttl<-c(ttl,ex_name(arg))
 		}
