@@ -32,11 +32,14 @@
 	seqes<-vector("list", length(ranges[,1]))
 	names(seqes)<-rownames(ranges)
 	chroms<-unique(ranges[,1])
+	dc_chroms<-chromosomes(dc)
+	nom_chroms<-setdiff(chroms,dc_chroms)
+	is_chroms<-intersect(chroms,dc_chroms)
 	if(!is.logical(control)){
 		if(class(control)[1]!="DensityContainer")stop("Input must be of class 'DensityContainer'")
 	}
 	
-	for(chrom in chroms){
+	for(chrom in is_chroms){
 		chrl<-paste(chrom,"_lind",sep="");chrg<-paste(chrom,"_gind",sep="");
 		uslices<-ranges[which(ranges[,1] == chrom),c(2,3)]
 		slicenames<-rownames(uslices)
@@ -63,6 +66,7 @@
 		}
 		seqes[slicenames]<-tlist
 	}
+	if(length(nom_chroms)>0)warning(sprintf("The following %d chromosome(s) were not found within the DensityContainer:\n %s",length(nom_chroms),paste(nom_chroms,collapse="|")))
 	if(!is.logical(control) && treads_norm)message(sprintf("Normalization factor: %.2f",norm_fact))
 	seqes<-seqes[nrns]
 	names(seqes)<-orinames
@@ -115,6 +119,11 @@ setMethod("sliceN", signature(dc="DensityContainer"), .sliceN)
 		if(class(control)[1]!="DensityContainer")stop("Input must be of class 'DensityContainer'")
 		subname<-data_pointer(control)
 		input_dense<-.Call("slice_dc",env[[subname]][[chrg]],env[[subname]][[chrl]],env[[subname]][[chrom]],start,end,PACKAGE = "TransView")[[1]]
+		
+		if(all(is.na(input_dense))){
+			warning(sprintf("%s was not found in the DensityContainer:\n%s",chrom))
+			return(input_dense)
+		}
 		
 		if(treads_norm){
 			norm_fact<-fmapmass(dc)/fmapmass(dc)#read normalization factor

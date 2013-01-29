@@ -24,6 +24,7 @@ test_sliceN <- function(){
 	checkTrue(is.null(resl[["interval_4"]]))
 }
 
+
 test_sliceN_filter <- function(){
 	#set a filter and check the same regions	
 	test_data3<-parseReads(filename,verbose=0,set_filter=data.frame(c("chr1","chr2"),c(5,21),c(200,31)))

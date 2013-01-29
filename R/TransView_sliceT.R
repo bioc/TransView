@@ -50,8 +50,11 @@
 	seqes<-vector("list", length(transc[,1]))
 	names(seqes)<-orinames
 	chroms<-unique(transc[,1])
+	dc_chroms<-chromosomes(dc)
+	nom_chroms<-setdiff(chroms,dc_chroms)
+	is_chroms<-intersect(chroms,dc_chroms)
 	if(min(transc$end-transc$start)<1)stop("Exons with length < 1 detected")
-	for(chrom in chroms){
+	for(chrom in is_chroms){
 		chrl<-paste(chrom,"_lind",sep="");chrg<-paste(chrom,"_gind",sep="");
 		uslices<-transc[which(transc[,1] == chrom),c(2,3)]
 		uslices<-uslices[order(uslices[,1]),]
@@ -83,12 +86,14 @@
 	seqes<-seqes[orinames]
 	if(stranded){
 		seqes[negnames]<-lapply(seqes[negnames],rev)
-		unegnames<-negnames[which(negnames %in%  unique(transc$transcript_id))]
+		#unegnames<-unique(sapply(strsplit(negnames,"\\."),"[",1))
+		unegnames<-unique(transc[which(rownames(transc) %in% negnames),"transcript_id"])
 		sortind<-1:length(orinames)
 		invisible(lapply(unegnames,function(x){y<-which(transc$transcript_id==x);sortind[y]<<-sortind[rev(y)]}))
 		seqes<-seqes[sortind]
 	}
 	gc()
+	if(length(nom_chroms)>0)warning(sprintf("The following %d chromosome(s) were not found within the DensityContainer:\n %s",length(nom_chroms),paste(nom_chroms,collapse="|")))
 	if(concatenate){
 		b<-vector("list", length(unique(transc[,5])))
 		names(b)<-unique(transc[,5])
@@ -159,10 +164,13 @@ setMethod("sliceNT", signature(dc="DensityContainer",tnames="character"), .slice
 	
 	tlist<-.Call("slice_dc",env[[data_pointer(dc)]][[chrg]],env[[data_pointer(dc)]][[chrl]],env[[data_pointer(dc)]][[chrom]],starts,ends,PACKAGE = "TransView")
 	
-	if(!is.logical(control)){#check input
+	if(all(is.na(tlist))){
+		warning(sprintf("%s was not found in the DensityContainer:\n%s",chrom))
+	}else if(!is.logical(control)){#check input
 		subname<-data_pointer(control)
 		
 		input_dense<-.Call("slice_dc",env2[[subname]][[chrg]],env2[[subname]][[chrl]],env2[[subname]][[chrom]],starts,ends,PACKAGE = "TransView")
+		
 		if(treads_norm){
 			norm_fact<-nreads(dc)/nreads(control)#read normalization factor
 			input_dense<-lapply(input_dense,"*",norm_fact)
