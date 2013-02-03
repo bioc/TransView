@@ -45,9 +45,9 @@ plotTV<-function ( ..., regions, gtf=NA, scale="global", cluster="none", control
 			trefs<-length(unique(regions))
 			regions<-as.data.frame(gtf[which(values(gtf)$transcript_id %in% regions),])
 			tpeaks<-length(unique(regions$transcript_id))
-			if(tpeaks!=tpeaks){
+			if(tpeaks!=trefs){
 				if(tpeaks==0){stop("No identifier in column 'transcript_id' of the gtf is matching the regions!")
-				}else{warning(paste(tpeaks-length(unique(regions$transcript_id )),"transcript_id's not found in GTF"))}
+				}else{warning(paste(trefs-tpeaks,"transcript_id's not found in GTF"))}
 			}
 			rg<-split(regions,f=regions$transcript_id)
 			rg<-lapply(rg,function(x){c(as.character(x$seqnames)[1],min(x$start),max(x$end),sum(x$width),as.character(x$strand)[1],as.character(x$transcript_id)[1])})
@@ -55,7 +55,7 @@ plotTV<-function ( ..., regions, gtf=NA, scale="global", cluster="none", control
 			colnames(regions)<-c("seqnames","start","end","width","strand","transcript_id")
 		}else if(class(regions)[1]!="logical" || !is.na(regions))stop("regions must be of class 'GRanges' or 'character'")
 	}else{
-		regions<-as.data.frame(regions)
+		regions<-as.data.frame(regions,stringsAsFactors=F)
 		regions$seqnames<-as.character(regions$seqnames)
 		regions$strand<-as.character(regions$strand)
 		tpeaks<-nrow(regions)
@@ -194,9 +194,7 @@ plotTV<-function ( ..., regions, gtf=NA, scale="global", cluster="none", control
 		}
 		
 		cob<-.row_z_score(cob)#do kmeans clustering only on z scores
-		if(is.numeric(cluster)){
-			#do kmeans clustering only on z scores
-			kclust<-kmeans(.row_z_score(cob),cluster)$cluster
+		if(is.numeric(cluster)){kclust<-kmeans(cob,cluster)$cluster
 		}else if(substr(cluster,1,3)=="hc_"){
 			if(substr(cluster,4,5)=="sp"){dend<-as.dendrogram(hclust(as.dist(1-cor(t(cob), method="spearman"))))
 			}else if(substr(cluster,4,5)=="pe"){dend<-as.dendrogram(hclust(as.dist(1-cor(t(cob), method="pearson"))))
