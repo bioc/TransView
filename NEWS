@@ -1,4 +1,17 @@
 
+
+CHANGES IN VERSION 1.4.3
+------------------------
+
+BUG FIXES
+
+    o plotTV now correctly displays a two color plot, if only two colors are passed via colr
+    
+NEW FEATURES
+
+    o meltPeak can return loess smoothed scores.
+    
+
 CHANGES IN VERSION 1.4.2
 ------------------------
 

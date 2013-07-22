@@ -349,7 +349,8 @@ plotTV<-function ( ..., regions, gtf=NA, scale="global", cluster="none", control
 		}else if(key_limits[[argn]][1]>rmax && rmax>=1 && scale!="global")key_limits[[argn]][1]<-rmax-1
 		
 		plotmat[[argn]]<-shrink(plotmat[[argn]],key_limits[[argn]])
-		col[[argn]] <- colorpanel(key_limits[[argn]][2]-key_limits[[argn]][1], colr[1],colr[2],colr[3])
+		if(length(colr)<3){col[[argn]] <- colorpanel(key_limits[[argn]][2]-key_limits[[argn]][1], low=colr[1],high=colr[2])
+		}else{col[[argn]] <- colorpanel(key_limits[[argn]][2]-key_limits[[argn]][1],colr[1],colr[2],colr[3])}
 		if(!no_key & showPlot){
 			scalevec[[argn]]<-shrink(scalevec[[argn]],key_limits[[argn]])
 			breaks <- seq(key_limits[[argn]][1], key_limits[[argn]][2], length = length(col[[argn]])+1)

@@ -83,7 +83,7 @@ If set to \code{TRUE}, all sample groups will be normalized based on the map mas
 If \code{TRUE}, no color keys will be displayed.  
 }
   \item{stranded_peak}{
-If \code{TRUE} and strand informations are provided in \code{peaks}, peak profiles will flipped if located on the negative strand.
+If \code{TRUE} and strand informations are provided in \code{regions}, peak profiles will flipped if located on the negative strand.
 }  
   \item{ck_size}{
   Determines the size of the colour key in the form \code{c(height,width)}
