@@ -10,7 +10,7 @@ A convenience function to associate a genomic position to a TSS provided by a gt
 }
 
 \usage{
-annotatePeaks(peaks, gtf, limit=c(-10e3,10e3), remove_unmatched=T, unifyBy=F, unify_fun="mean", min_genelength=300)
+annotatePeaks(peaks, gtf, limit=c(-10e3,10e3), remove_unmatched=T, unifyBy=F, unify_fun="mean", min_genelength=0)
 }
 
 \arguments{

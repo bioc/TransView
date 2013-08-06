@@ -527,7 +527,7 @@ plotTV<-function ( ..., regions, gtf=NA, scale="global", cluster="none", control
 	params<-list("colnames_peaks"=ttl,"colnames_expression"=ttlRNA,scale=scale, cluster=cluster, control = control, peak_windows = peak_windows, show_names=show_names, label_size=label_size, 
 			zero_alpha=zero_alpha, colr=colr, colr_df=colr_df,colour_spread=colour_spread, key_limit=key_limit, 
 			key_limit_rna=key_limit_rna, rowv=rowv,ex_windows=ex_windows, gclust=gclust, norm_readc=norm_readc, no_key=no_key, 
-			stranded_peak=stranded_peak, ck_size=ck_size, remove_lowex=remove_lowex, verbose=verbose,"Matrices"=hmapc,"Expression_data"=argcRNA,"Peak_data"=argc,showPlot=showPlot)
+			stranded_peak=stranded_peak, ck_size=ck_size, remove_lowex=remove_lowex, verbose=verbose, pre_mRNA=F,"Matrices"=hmapc,"Expression_data"=argcRNA,"Peak_data"=argc,showPlot=showPlot)
 	
 	ptv_order$NewPosition<-order(ptv_order$NewPosition)
 	if(!is.list(plotmatRNA))plotmatRNA<-list(plotmatRNA)
