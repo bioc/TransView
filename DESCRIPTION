@@ -2,7 +2,7 @@ Package: TransView
 Type: Package
 Title: Read density map construction and accession. Visualization of
         ChIPSeq and RNASeq data sets
-Version: 1.26.0
+Version: 1.26.1
 Author: Julius Muller
 Maintainer: Julius Muller <ju-mu@alumni.ethz.ch>
 Description: This package provides efficient tools to generate, access
@@ -16,6 +16,6 @@ Imports: BiocGenerics, S4Vectors (>= 0.9.25), IRanges, Rsamtools (>= 1.19.38),
         zlibbioc, gplots
 Suggests: RUnit, pasillaBamSubset, BiocManager
 LinkingTo: Rsamtools
-biocViews: DNAMethylation, GeneExpression, Transcription, Microarray,
+biocViews: ImmunoOncology, DNAMethylation, GeneExpression, Transcription, Microarray,
         Sequencing, Sequencing, ChIPSeq, RNASeq, MethylSeq, DataImport,
         Visualization, Clustering, MultipleComparison
