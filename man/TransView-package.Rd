@@ -20,7 +20,7 @@ URL: \tab http://bioconductor.org/packages/release/bioc/html/TransView.html\cr
 License: \tab GPL-3\cr
 LazyLoad: \tab yes\cr
 Depends: \tab methods,GenomicRanges\cr
-Imports: \tab zlibbioc,gplots,IRanges\cr
+Imports: \tab gplots,IRanges\cr
 Suggests: \tab RUnit,pasillaBamSubset\cr
 biocViews: \tab Bioinformatics,DNAMethylation,GeneExpression,Transcription,
 Microarray,Sequencing,HighThroughputSequencing,ChIPseq,RNAseq,

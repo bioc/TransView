@@ -12,7 +12,7 @@ URL: http://bioconductor.org/packages/release/bioc/html/TransView.html
 License: GPL-3
 LazyLoad: yes
 Depends: methods, GenomicRanges
-Imports: BiocGenerics, S4Vectors (>= 0.9.25), IRanges, zlibbioc, gplots
+Imports: BiocGenerics, S4Vectors (>= 0.9.25), IRanges, gplots
 Suggests: RUnit, pasillaBamSubset, BiocManager
 LinkingTo: Rhtslib (>= 1.99.1)
 SystemRequirements: GNU make
