@@ -1,7 +1,6 @@
 
 useDynLib(TransView)
 
-import(zlibbioc)
 import(S4Vectors)
 importFrom("IRanges",IRanges,RleList)
 importFrom("GenomicRanges",GRanges,GRangesList)
