@@ -1,0 +1,23 @@
+DensityContainer-class
+                        Class '"DensityContainer"'
+TVResults-class         Class '"TVResults"'
+TransView-package       Read density map construction and accession.
+                        Visualization of ChIPSeq and RNASeq data sets.
+annotatePeaks           Associates peaks to TSS
+gtf2gr                  GTF file parsing
+histogram-methods       Histogram of the read distribution
+macs2gr                 Convenience function for MACS output conversion
+meltPeak                Convenience function which returns a data frame
+                        with normalized peak densities suitable for
+                        plotting with ggplot2
+parseReads              User configurable efficient assembly of read
+                        density maps
+peak2tss                Changes the peak center to the next TSS
+                        according to previous annotation
+plotTV                  Plot and cluster global read densities
+plotTVData              Summarize plotTV results
+rmTV                    Free space occupied by DensityContainer
+slice1                  Slice read densities from a TransView dataset
+slice1T                 Slice read densities of whole transcripts from
+                        a TransView DensityContainer
+tvStats-methods         DensityContainer accessor function
