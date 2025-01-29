@@ -159,8 +159,8 @@ void quality_check(read_metrics_t *rm,bam1_t *temp_read,user_arguments_t *user_a
 	if(!rm->read_length){
 		rm->read_length=temp_read->core.l_qseq;
 		if(!rm->read_length){
-		  warning("Read length neither found in core.isize=%ld, core.l_qseq=%d or cigar=%p!\n",
-            (long)temp_read->core.isize, temp_read->core.l_qseq, (void*)bam1_cigar(temp_read));
+		  warning("Read length neither found in core.isize=%lld, core.l_qseq=%d or cigar=%p!\n",
+            (long long)temp_read->core.isize, temp_read->core.l_qseq, (void*)bam1_cigar(temp_read));
 		  rm->skip=-4;
 			return;
 		}
@@ -201,8 +201,8 @@ void quality_check(read_metrics_t *rm,bam1_t *temp_read,user_arguments_t *user_a
 void print_readinfo(seq_block_t *bresults,bam1_t *current_read,read_metrics_t *rm,samfile_t *bam_file){
 	Rprintf("\nREADING %d\n",bresults->total_reads);
 	Rprintf("Chrom %s\n",bam_file->header->target_name[current_read->core.tid]);
-	Rprintf("Pos %ld\n", (long)current_read->core.pos);
-	Rprintf("Len %d -> END: %ld\n", rm->read_length, (long)(rm->read_length + current_read->core.pos));
+	Rprintf("Pos %lld\n", (long long)current_read->core.pos);
+	Rprintf("Len %d -> END: %lld\n", rm.read_length, (long long)(rm.read_length + current_read->core.pos));
 	Rprintf("REVCOMP: %d\n",rm->revcomp);
 	Rprintf("SKIP: %d\n",rm->skip);
 	Rprintf("mapq: %d\n",*bam1_qual(current_read));
@@ -313,9 +313,9 @@ seq_block_t seq_density(usersize *cptr, uint32_t *databl_start, uint32_t *databl
 		} else if(BUFFERLIMIT<abs_gen_end || abs_gen_end < 0){
 			//skip read if sequence out of bounce
 			//possibly bad header with wrong chromosome margins or EXTEND too large!
-			warning("BUFFER only %d\n But POS: %ld cur_seq_len: %d EXTEND: %d -> %ld \n GLOBAL %ld\n",
-           BUFFERLIMIT, (long)current_read->core.pos, rm.read_length, user_args->EXTEND,
-           (long)(current_read->core.pos + rm.read_length + user_args->EXTEND), (long)abs_gen_end);
+			warning("BUFFER only %d\n But POS: %lld cur_seq_len: %d EXTEND: %d -> %lld \n GLOBAL %lld\n",
+           BUFFERLIMIT, (long long)current_read->core.pos, rm.read_length, user_args->EXTEND,
+           (long long)(current_read->core.pos + rm.read_length + user_args->EXTEND), (long long)abs_gen_end);
 			#if pedantic==1
 			bresults.file_status=-4;
 			return bresults;
