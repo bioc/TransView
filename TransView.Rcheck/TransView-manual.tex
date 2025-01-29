@@ -1,0 +1,1333 @@
+\nonstopmode{}
+\documentclass[letterpaper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\makeatletter\@ifl@t@r\fmtversion{2018/04/01}{}{\usepackage[utf8]{inputenc}}\makeatother
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `TransView'}}
+\par\bigskip{\large \today}
+\end{center}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdftitle = {TransView: Read density map construction and accession. Visualization of ChIPSeq and RNASeq data sets}}}{}
+\begin{description}
+\raggedright{}
+\item[Type]\AsIs{Package}
+\item[Title]\AsIs{Read density map construction and accession. Visualization of
+ChIPSeq and RNASeq data sets}
+\item[Version]\AsIs{1.50.0}
+\item[Author]\AsIs{Julius Muller}
+\item[Maintainer]\AsIs{Julius Muller }\email{ju-mu@alumni.ethz.ch}\AsIs{}
+\item[Description]\AsIs{This package provides efficient tools to generate, access
+and display read densities of sequencing based data sets such
+as from RNA-Seq and ChIP-Seq.}
+\item[URL]\AsIs{}\url{http://bioconductor.org/packages/release/bioc/html/TransView.html}\AsIs{}
+\item[License]\AsIs{GPL-3}
+\item[LazyLoad]\AsIs{yes}
+\item[Depends]\AsIs{methods, GenomicRanges}
+\item[Imports]\AsIs{BiocGenerics, S4Vectors (>= 0.9.25), IRanges, gplots}
+\item[Suggests]\AsIs{RUnit, pasillaBamSubset, BiocManager}
+\item[LinkingTo]\AsIs{Rhtslib (>= 1.99.1)}
+\item[SystemRequirements]\AsIs{GNU make}
+\item[biocViews]\AsIs{ImmunoOncology, DNAMethylation, GeneExpression,
+Transcription, Microarray, Sequencing, Sequencing, ChIPSeq,
+RNASeq, MethylSeq, DataImport, Visualization, Clustering,
+MultipleComparison}
+\item[NeedsCompilation]\AsIs{yes}
+\end{description}
+\Rdcontents{Contents}
+\HeaderA{TransView-package}{Read density map construction and accession. Visualization of ChIPSeq and RNASeq data sets.}{TransView.Rdash.package}
+\aliasA{TransView}{TransView-package}{TransView}
+\keyword{package}{TransView-package}
+%
+\begin{Description}
+This package provides efficient tools to generate, access and display 
+read densities of sequencing based data sets such as from RNA-Seq and ChIP-Seq.  
+\end{Description}
+%
+\begin{Details}
+
+\Tabular{ll}{
+Package: & TransView\\{}
+Type: & Package\\{}
+Version: & 1.7.4\\{}
+URL: & http://bioconductor.org/packages/release/bioc/html/TransView.html\\{}
+License: & GPL-3\\{}
+LazyLoad: & yes\\{}
+Depends: & methods,GenomicRanges\\{}
+Imports: & gplots,IRanges\\{}
+Suggests: & RUnit,pasillaBamSubset\\{}
+biocViews: & Bioinformatics,DNAMethylation,GeneExpression,Transcription,
+Microarray,Sequencing,HighThroughputSequencing,ChIPseq,RNAseq,
+Methylseq,DataImport,Visualization,Clustering,MultipleComparisons\\{}
+LinkingTo: & Rhtslib\\{}
+}
+
+Index:
+\begin{alltt}
+DensityContainer-class
+                        Class '"DensityContainer"'
+TVResults-class         Class '"TVResults"'
+TransView-package       The TransView package: Construction and
+                        visualisation of read density maps.
+annotatePeaks           Associates peaks to TSS
+gtf2gr                  GTF file parsing
+histogram-methods       Histogram of the read distribution
+macs2gr                 Convenience function for MACS output conversion
+parseReads              User configurable efficient assembly of read
+                        density maps
+peak2tss                Changes the peak center to the TSS
+plotTV                  Plot and cluster global read densities
+plotTVData              Summarize plotTV results
+rmTV                    Free space occupied by DensityContainer
+slice1                  Slice read densities from a TransView dataset
+slice1T                 Slice read densities of whole transcripts from
+                        a TransView DensityContainer
+tvStats-methods         DensityContainer accessor function
+\end{alltt}
+
+
+Further information is available in the following vignettes:
+
+\Tabular{ll}{
+\code{TransView} & An introduction to TransView (source, pdf)\\{}
+}
+\end{Details}
+%
+\begin{Author}
+Julius Muller
+
+Maintainer: Julius Muller <ju-mu@alumni.ethz.ch>
+
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+#see vignette
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{annotatePeaks}{Associates peaks to TSS}{annotatePeaks}
+%
+\begin{Description}
+A convenience function to associate the peak center to a TSS or gene body provided by a gtf file. 
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+annotatePeaks(peaks, gtf, limit=c(-10e3,10e3), remove_unmatched=T, unifyBy=F, unify_fun="mean", min_genelength=0, reference="tss")
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{peaks}] 
+A \LinkA{GRanges}{GRanges.Rdash.class} object. 
+
+\item[\code{gtf}] 
+A \LinkA{GRanges}{GRanges.Rdash.class} object with a meta data column `transcript\_id' and `exon\_id' like e.g. from \code{gtf2gr}. 
+
+\item[\code{limit}] 
+Maximal distance range for a peak - TSS association in base pairs.  
+
+\item[\code{remove\_unmatched}] 
+If TRUE, only TSS associated peaks will be returned.
+
+\item[\code{unifyBy}] 
+If a transcript has multiple isoforms, the peak will be associated arbitrarily to the first ID found. In order associate a peak to an isoform with specific characteristics, a \code{DensityContainer} can be provided. The choice of the returned isoform will be made based on unify\_fun.
+
+\item[\code{unify\_fun}] 
+A function which will choose the isoform in case of non unique peak - TSS associations. Defaults to the isoform with the highest mean score \code{function(x)\{mean(x)\}}.
+
+\item[\code{min\_genelength}] 
+Genes with a total sum of all exons smaller than this value will not be associated to a peak.
+
+\item[\code{reference}] 
+If set to `tss', the transcript with the smallest distance from the TSS to the peak center will be returned. If set to `gene\_body' the transcript with the smallest distance from the gene body (TSS or TES) to the peak center will be returned and the distance will be zero if the peak center is located within the gene body.  
+
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+Convenience function to annotate a \LinkA{GRanges}{GRanges.Rdash.class} object having one row per peak from e.g. \code{macs2gr}. The resulting peak - TSS associations can be customized by the restricting the distance and resolving multiple matches using unify\_fun.
+\end{Details}
+%
+\begin{Value}
+\LinkA{GRanges}{GRanges.Rdash.class} object with row names according to the peak names provided and an added or updated meta data column `transcript\_id' with the associated transcript IDs and distances.
+\end{Value}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+exgtf<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="gtf.gz$")[2]
+exls<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="xls$")
+
+GTF<-gtf2gr(exgtf)
+peaks<-macs2gr(exls,psize=500)
+apeaks<-annotatePeaks(peaks=peaks,gtf=GTF)
+apeaks.gb<-annotatePeaks(peaks=peaks,gtf=GTF,reference="gene_body")
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{DensityContainer-class}{Class \code{"DensityContainer"}}{DensityContainer.Rdash.class}
+\aliasA{chromosomes}{DensityContainer-class}{chromosomes}
+\aliasA{chromosomes,DensityContainer-method}{DensityContainer-class}{chromosomes,DensityContainer.Rdash.method}
+\aliasA{class:DensityContainer}{DensityContainer-class}{class:DensityContainer}
+\aliasA{collapsed}{DensityContainer-class}{collapsed}
+\aliasA{collapsed,DensityContainer-method}{DensityContainer-class}{collapsed,DensityContainer.Rdash.method}
+\aliasA{compression}{DensityContainer-class}{compression}
+\aliasA{compression,DensityContainer-method}{DensityContainer-class}{compression,DensityContainer.Rdash.method}
+\aliasA{data\_pointer}{DensityContainer-class}{data.Rul.pointer}
+\aliasA{data\_pointer,DensityContainer-method}{DensityContainer-class}{data.Rul.pointer,DensityContainer.Rdash.method}
+\aliasA{env}{DensityContainer-class}{env}
+\aliasA{env,DensityContainer-method}{DensityContainer-class}{env,DensityContainer.Rdash.method}
+\aliasA{ex\_name}{DensityContainer-class}{ex.Rul.name}
+\aliasA{ex\_name,DensityContainer-method}{DensityContainer-class}{ex.Rul.name,DensityContainer.Rdash.method}
+\aliasA{ex\_name<\Rdash{}}{DensityContainer-class}{ex.Rul.name<.Rdash.}
+\aliasA{ex\_name<\Rdash{},DensityContainer-method}{DensityContainer-class}{ex.Rul.name<.Rdash.,DensityContainer.Rdash.method}
+\aliasA{filtered}{DensityContainer-class}{filtered}
+\aliasA{filtered,DensityContainer-method}{DensityContainer-class}{filtered,DensityContainer.Rdash.method}
+\aliasA{filtered\_reads}{DensityContainer-class}{filtered.Rul.reads}
+\aliasA{filtered\_reads,DensityContainer-method}{DensityContainer-class}{filtered.Rul.reads,DensityContainer.Rdash.method}
+\aliasA{fmapmass}{DensityContainer-class}{fmapmass}
+\aliasA{fmapmass,DensityContainer-method}{DensityContainer-class}{fmapmass,DensityContainer.Rdash.method}
+\aliasA{gcoverage}{DensityContainer-class}{gcoverage}
+\aliasA{gcoverage,DensityContainer-method}{DensityContainer-class}{gcoverage,DensityContainer.Rdash.method}
+\aliasA{gsize}{DensityContainer-class}{gsize}
+\aliasA{gsize,DensityContainer-method}{DensityContainer-class}{gsize,DensityContainer.Rdash.method}
+\aliasA{lcoverage}{DensityContainer-class}{lcoverage}
+\aliasA{lcoverage,DensityContainer-method}{DensityContainer-class}{lcoverage,DensityContainer.Rdash.method}
+\aliasA{lmaxScore}{DensityContainer-class}{lmaxScore}
+\aliasA{lmaxScore,DensityContainer-method}{DensityContainer-class}{lmaxScore,DensityContainer.Rdash.method}
+\aliasA{lowqual}{DensityContainer-class}{lowqual}
+\aliasA{lowqual,DensityContainer-method}{DensityContainer-class}{lowqual,DensityContainer.Rdash.method}
+\aliasA{lsize}{DensityContainer-class}{lsize}
+\aliasA{lsize,DensityContainer-method}{DensityContainer-class}{lsize,DensityContainer.Rdash.method}
+\aliasA{maxScore}{DensityContainer-class}{maxScore}
+\aliasA{maxScore,DensityContainer-method}{DensityContainer-class}{maxScore,DensityContainer.Rdash.method}
+\aliasA{neg}{DensityContainer-class}{neg}
+\aliasA{neg,DensityContainer-method}{DensityContainer-class}{neg,DensityContainer.Rdash.method}
+\aliasA{nreads}{DensityContainer-class}{nreads}
+\aliasA{nreads,DensityContainer-method}{DensityContainer-class}{nreads,DensityContainer.Rdash.method}
+\aliasA{origin}{DensityContainer-class}{origin}
+\aliasA{origin,DensityContainer-method}{DensityContainer-class}{origin,DensityContainer.Rdash.method}
+\aliasA{paired}{DensityContainer-class}{paired}
+\aliasA{paired,DensityContainer-method}{DensityContainer-class}{paired,DensityContainer.Rdash.method}
+\aliasA{paired\_reads}{DensityContainer-class}{paired.Rul.reads}
+\aliasA{paired\_reads,DensityContainer-method}{DensityContainer-class}{paired.Rul.reads,DensityContainer.Rdash.method}
+\aliasA{pos}{DensityContainer-class}{pos}
+\aliasA{pos,DensityContainer-method}{DensityContainer-class}{pos,DensityContainer.Rdash.method}
+\aliasA{proper\_pairs}{DensityContainer-class}{proper.Rul.pairs}
+\aliasA{proper\_pairs,DensityContainer-method}{DensityContainer-class}{proper.Rul.pairs,DensityContainer.Rdash.method}
+\aliasA{readthrough\_pairs}{DensityContainer-class}{readthrough.Rul.pairs}
+\aliasA{readthrough\_pairs,DensityContainer-method}{DensityContainer-class}{readthrough.Rul.pairs,DensityContainer.Rdash.method}
+\aliasA{show,DensityContainer-method}{DensityContainer-class}{show,DensityContainer.Rdash.method}
+\aliasA{size}{DensityContainer-class}{size}
+\aliasA{size,DensityContainer-method}{DensityContainer-class}{size,DensityContainer.Rdash.method}
+\aliasA{spliced}{DensityContainer-class}{spliced}
+\aliasA{spliced,DensityContainer-method}{DensityContainer-class}{spliced,DensityContainer.Rdash.method}
+\aliasA{spliced<\Rdash{}}{DensityContainer-class}{spliced<.Rdash.}
+\aliasA{spliced<\Rdash{},DensityContainer-method}{DensityContainer-class}{spliced<.Rdash.,DensityContainer.Rdash.method}
+\aliasA{strands}{DensityContainer-class}{strands}
+\aliasA{strands,DensityContainer-method}{DensityContainer-class}{strands,DensityContainer.Rdash.method}
+\keyword{classes}{DensityContainer-class}
+%
+\begin{Description}
+Container with the pointer of the actual density maps and a histogram. Inherits from internal classes storing informations about the origin and the details of the results.
+\end{Description}
+%
+\begin{Section}{Objects from the Class}
+Objects are created by the function \code{parseReads()} using an internal constructor.
+\end{Section}
+%
+\begin{Section}{Accessors}
+dc represents a \code{"DensityContainer"} instance in the following
+\begin{description}
+
+\item[\code{data\_pointer(dc)}:] A character string pointing to the read density map. 
+It points to a variable in .GlobalEnv which is essentially a list resulting from a call to \code{parseReads}.
+The storage space can be freed with the \code{rmTV} function. 
+\item[\code{ex\_name(dc)},\code{ex\_name(dc)<-value}:] Get or set a string to define a name of this data set
+\item[\code{origin(dc)}:] Filename of the original file
+\item[\code{histogram(dc)}:] A histogram of read pile-ups generated across all read density maps after filtering excluding gaps. 
+\item[\code{env(dc)}:] The environment which holds the data\_pointer target. 
+\item[\code{spliced(dc)},\code{spliced(dc)<-bool}:] This option will mark the object to be treated like a data set with spliced reads.
+\item[\code{readthrough\_pairs(dc)}:] If TRUE, paired reads will be connected from left to right and used as one long read.
+\item[\code{paired(dc)}:] Does the source file contain reads with proper pairs?  
+\item[\code{filtered(dc)}:] Is there a range filter in place? If \code{TRUE}, slicing should be only conducted using the same filter!! 
+\item[\code{strands(dc)}:] Which strands were parsed at all. Can be "+", "-" or "both" 
+\item[\code{filtered\_reads(dc)}:] FilteredReads class storing information about reads used for read density construction
+\item[\code{chromosomes(dc)}:] Character string with the chromosomes used for map construction
+\item[\code{pos(dc)}:] Reads used from the forward strand
+\item[\code{neg(dc)}:] Reads used from the reverse strand
+\item[\code{lsize(dc)}:] Total region covered by reads within the densities returned
+\item[\code{gsize(dc)}:] Equals to the sum of the length of all ranges from 0 to the last read per chromosome within the chromosome.
+\item[\code{lcoverage(dc)}:] Local coverage within the densities returned which is computed by local mapmass/lsize
+\item[\code{lmaxScore(dc)}:] Maximum read pileup within the density maps after filtering
+\item[\code{fmapmass(dc)}:] Total map mass after quality filtering present in the file. Equals to filtered\_reads*read length
+\item[\code{nreads(dc)}:] Total number of reads in the file.
+\item[\code{coverage(dc)}:] Total coverage computed by total map mass/(chromosome end - chromosome start). Chromosome length derived from the SAM/BAM header
+\item[\code{maxScore(dc)}:] Maximum read pileup found in file after quality filtering
+\item[\code{lowqual(dc)}:] Amount of reads that did not pass the quality score set by min\_quality or were not mapped
+\item[\code{paired\_reads(dc)}:] Amount of reads having multiple segments in sequencing
+\item[\code{proper\_pairs(dc)}:] Amount of pairs with each segment properly aligned according to the aligner
+\item[\code{collapsed(dc)}:] If maxDups is in place, the reads at the same position and strand exceeding this value will be counted here.   
+\item[\code{size(dc)}:] Size in bytes occupied by the object.   
+
+
+\end{description}
+
+\end{Section}
+%
+\begin{Section}{Slice Methods}
+\begin{description}
+
+\item[slice1] \code{signature(dc = "DensityContainer")}: Fetch a slice of read densities. 
+\item[slice1T] \code{signature(dc = "DensityContainer")}: Recover the structure of a gene from a provided pre-processed GTF and read densities. 
+\item[sliceN] \code{signature(dc = "DensityContainer", ranges = "data.frame")}: Like slice1 but optimized for repeated slicing. 
+\item[sliceNT] \code{signature(dc = "DensityContainer", tnames = "character", gtf = "data.frame")}: Like slice1T but optimized for repeated slicing. 
+
+\end{description}
+
+\end{Section}
+%
+\begin{Section}{Convenience Methods}
+\begin{description}
+
+\item[tvStats] \code{signature(dc = "DensityContainer")}: Returns a list of important metrics about the source file.
+
+\end{description}
+
+\end{Section}
+%
+\begin{Section}{Extends}
+Class \code{TransView}, directly.
+\end{Section}
+%
+\begin{Note}
+Class TotalReads and FilteredReads are not exported but their slots can be fully accessed by several accessors and the \code{tvStats()} method.
+\end{Note}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+%
+\begin{SeeAlso}
+\code{\LinkA{tvStats-methods}{tvStats.Rdash.methods}},
+\code{\LinkA{slice1-methods}{slice1.Rdash.methods}},
+\code{\LinkA{sliceN-methods}{sliceN.Rdash.methods}},
+\code{\LinkA{histogram-methods}{histogram.Rdash.methods}},
+\code{\LinkA{rmTV-methods}{rmTV.Rdash.methods}}
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+showClass("DensityContainer")
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{gtf2gr}{GTF file parsing}{gtf2gr}
+%
+\begin{Description}
+
+Conversion of a gtf file from UCSC or ENSEMBL to a \LinkA{GRanges}{GRanges.Rdash.class} object maintaining the exon structure per transcript.
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+gtf2gr(gtf_file, chromosomes=NA, refseq_nm=F, gtf_feature=c("exon"),transcript_id="transcript_id",gene_id="gene_id")
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{gtf\_file}] 
+Character string with the filename of the gtf file. Fileformats from USCS and ENSEMBL are supported and gzip compression is supported.
+
+\item[\code{chromosomes}] 
+A character vector with the chromosomes. Restricts the output to the case insensitive matching chromosomes.
+
+\item[\code{refseq\_nm}] 
+An option for GTF files based on RefSeq annotation. If TRUE only identifiers beginning with NM\_ will be used.
+
+\item[\code{gtf\_feature}] 
+Defines the GTF feature types to be returned.
+
+\item[\code{transcript\_id}] 
+Defines name of the attribute within the attribute list which should be used as transcript IDs.
+
+\item[\code{gene\_id}] 
+Defines name of the attribute within the attribute list which should be used as gene IDs.
+
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+This function parses GTF files generated by the UCSC table browser or downloaded from the ENSEMBL ftp server. It uses only rows with a 'exon' tag in the feature column (3rd column). The transcript name will be generated from the 'transcript' entry in the attribute column (9th column). The exons of each transcript are numbered using the \code{make.unique} function on the transcript name and used as row names.
+\end{Details}
+%
+\begin{Value}
+GenomicRanges object with one row per exon. \code{rownames} are transcript IDs and an exon\_id is provided.
+\end{Value}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+exgtf<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="gtf.gz$")
+
+GTF.mm9<-gtf2gr(exgtf[2])
+
+head(GTF.mm9)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{histogram-methods}{ Histogram of the read distribution }{histogram.Rdash.methods}
+\aliasA{histogram}{histogram-methods}{histogram}
+\aliasA{histogram,DensityContainer-method}{histogram-methods}{histogram,DensityContainer.Rdash.method}
+\keyword{methods}{histogram-methods}
+%
+\begin{Description}
+Retrieves the histogram computed by the \code{parseReads} function
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S4 method for signature 'DensityContainer'
+histogram(dc)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+
+\begin{ldescription}
+\item[\code{dc}] 
+An object of class \LinkA{DensityContainer}{DensityContainer.Rdash.class}.
+
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+The histogram is computed by taking the running average within a window of window size as specified by the argument \code{hwindow} to the function \code{parseReads()}. 
+The histogram is only counting local reads within the read density maps and outside of gaps or outside of possible range filters that might be in place.
+\end{Details}
+%
+\begin{Value}
+Returns a numeric vector with the histogram in 1Bp resolution starting from 0.
+\end{Value}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+\HeaderA{macs2gr}{Convenience function for MACS output conversion}{macs2gr}
+%
+\begin{Description}
+
+Parses the output of MACS Peak finding algorithm and returns a \LinkA{GRanges}{GRanges.Rdash.class} object compatible to the down stream functions of TransView
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+macs2gr(macs_peaks_xls, psize, amount="all", min_pileup=0, log10qval=0, log10pval=0, fenrichment=0, peak_mid="summit")
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{macs\_peaks\_xls}] 
+Full path to the file ending with `\_peaks.xls' located in the output folder of a MACS run.
+
+\item[\code{psize}] 
+An integer setting the total length of the peaks. Setting psize to `preserve' will keep the original peak lengths from the output file and override \code{peak\_mid}. Note that this is not compatible with \code{plotTV}
+
+\item[\code{amount}] 
+Amount of peaks returned. If an integer is provided, the returned peaks will be limited to this amount after sorting by pile up score.
+
+\item[\code{min\_pileup}] 
+Minimum pile up.
+
+\item[\code{log10qval}] 
+Minimal log10 q-value
+
+\item[\code{log10pval}] 
+Minimal log10 p-value
+
+\item[\code{fenrichment}] 
+Minimal enrichment.
+
+\item[\code{peak\_mid}] 
+If set to `summit', the peaks with length \code{psize} will centered on the peak summit. If set to `center', the mid point of start and end will be used.
+
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+Convenience function parsing the output of a MACS file. Tested with MACS v1.4 and v.2.09
+\end{Details}
+%
+\begin{Value}
+\code{GRanges} object with one row per peak and meta data score, enrichment and log10 pvalue.
+\end{Value}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+exls<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="xls$")
+
+peaks<-macs2gr(exls,psize=500)
+head(peaks)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{meltPeak}{Convenience function which returns a data frame with normalized peak densities suitable for plotting with ggplot2}{meltPeak}
+%
+\begin{Description}
+
+Returns a data frame with labels and normalized densities of the provided \LinkA{DensityContainer}{DensityContainer.Rdash.class}
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+meltPeak(..., region, control=FALSE, peak_windows = 0, bin_method="mean", rpm=TRUE, smooth=0)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{...}] 
+\LinkA{DensityContainer}{DensityContainer.Rdash.class} objects
+
+\item[\code{region}] 
+Can be one entry of the annotated output of annotatePeaks or a \LinkA{GRanges}{GRanges.Rdash.class} object with one entry and with a transcript\_id and distance metadata column.
+
+\item[\code{control}] 
+An optional vector of \LinkA{DensityContainer}{DensityContainer.Rdash.class} objects, that have to match the order of experiments passed as a first argument. E.g. \code{plotTV(ex1.ChIP,ex2.ChIP,control=c(ex1.Input,ex2.Input)}. The content will be treated as background densities and subtracted from the matching experiment.
+
+\item[\code{peak\_windows}] 
+If set to an integer greater than 0, all binding profiles will be interpolated into this amount of windows by the method specified by \code{bin\_method}.
+
+\item[\code{bin\_method}] 
+Specifies the function used to summarize the bins specified by nbins. Possible methods are `max', `mean', `median' or `approx' for linear interpolation. 
+
+\item[\code{rpm}] 
+If set to \code{TRUE}, all sample groups will be normalized to Reads Per Million mapped reads after quality filtering according to the filtered\_reads slot of the \LinkA{DensityContainer}{DensityContainer.Rdash.class}. Should not be set in truncated density maps!
+
+\item[\code{smooth}] 
+If greater than 0, smooth defines the smoother span as described in the function \code{lowess}. This function will be applied to reads or RPM values, depending on \code{rpm} and the results will be stored in the column `Smooth'.
+
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+Convenience function which returns a data frame with one row per BP or, if \code{peak\_window} greater than zero, per \code{peak\_window}. The label will be taken from the \code{ex\_name} slot of the \LinkA{DensityContainer}{DensityContainer.Rdash.class}. The slot should be set to meaningful names before using this function. All read densities will be normalized to the total map mass and if a control is provided also background subtracted.
+\end{Details}
+%
+\begin{Value}
+\code{data.frame} with 3 columns: `NormalizedReads', `Label' and `Position'. Optionally a column `Smooth' will be appended.
+\end{Value}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+exbam<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="bam$")
+exls<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="xls$")
+exgtf<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="gtf.gz$")[2]
+fn.macs<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="xls$")
+
+exden.ctrl<-parseReads(exbam[1],verbose=0)
+exden.chip<-parseReads(exbam[2],verbose=0)
+
+peaks<-macs2gr(exls,psize=500)
+
+GTF<-gtf2gr(exgtf)
+peaks<-macs2gr(fn.macs,psize=500)
+peaks.anno<-annotatePeaks(peaks=peaks,gtf=GTF)
+
+peak1.df<-meltPeak(exden.chip,region=peaks.anno["Peak.1"],bin_method="mean",peak_windows=100,rpm=TRUE)
+head(peak1.df)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{parseReads}{User configurable efficient assembly of read density maps}{parseReads}
+%
+\begin{Description}
+
+Generates density maps for further downstream processing. Constructs a \code{DensityContainer}.
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+parseReads( filename, spliced=F, read_stranded=0, paired_only=F, readthrough_pairs=F, set_filter=NA, min_quality=0,
+		description="NA", extendreads=0, unique_only=F,	max_dups=0, hwindow=1, compression=1, verbose=1 )
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{filename}] 
+Character string with the filename of the bam file. The bam file must be sorted according to genomic position.
+
+\item[\code{spliced}] 
+This option will mark the object to be treated like a data set with spliced reads. Can be switched off also for spliced experiments for special purposes. If \code{TRUE}, switches off \code{extendreads} and \code{readthrough\_pairs}. 
+ 
+\item[\code{read\_stranded}] 
+0 will read tags from both strands. 1 will skip all tags from the `-' strand and -1 will only utilize tags from the `-' strand 
+
+\item[\code{paired\_only}] 
+If \code{TRUE}, any reads which are not members of a proper pair according to the 0x0002 FLAG will be discarded. If \code{FALSE} all reads will be used individually.
+
+\item[\code{set\_filter}] 
+Optional \LinkA{GRanges}{GRanges.Rdash.class} object or data.frame with similar structure: data.frame(chromosomes,start,end). Providing this filter will limit density maps to these regions.
+
+\item[\code{min\_quality}] 
+Phred-scaled mapping quality threshold. If 0, all reads will pass this filter.
+
+\item[\code{extendreads}] 
+If greater 0, this amount of base pairs will be added into the strand direction of each read during density map generation.
+
+\item[\code{unique\_only}] 
+If TRUE, only unique reads with no multiple alignments will be used. This filter relies on the aligner to use the corresponding flag (0x100).
+
+\item[\code{max\_dups}] 
+If greater 0, maximally this amount of reads are allowed per start position and read direction.
+ 
+\item[\code{description}] 
+An optional character string describing the experiment for labeling purposes.
+
+\item[\code{hwindow}] 
+A numeric defining the window size used to compute the histogram. This value cannot be bigger than \code{compression}
+
+\item[\code{compression}] 
+Should be left at the default value. Defines the minimal threshold in base pairs which triggers indexing and collapsing of read free regions. A smaller value leads to faster slicing at the cost of a higher memory footprint. 
+
+\item[\code{readthrough\_pairs}] 
+Currently *experimental*. If \code{TRUE}, \code{parseReads} will attempt to use the region from the left to the right read of the pair for density map assembly. Requires ISIZE to be set within the BAM/SAM file. 
+
+\item[\code{verbose}] 
+Verbosity level
+
+
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+
+parseReads uses read information of one bam file and scans the entire file read wise. Every read contributes 
+to the density track in a user configurable manner. The resulting track will be stored in 
+indexed integer vectors within a list. Since each score is stored as a unsigned 16bit integer, the scores can only 
+be accessed with one of the slice methods \code{slice1} or \code{sliceN} and not directly. As a consequence of the storage 
+format read pile ups greater than \bold{2\textasciicircum{}16} will be capped and a warning will be issued. 
+
+If memory space is limiting, a filter can be supplied which will limit the density track to these regions. 
+Filtered \code{DensityContainer} should only be sliced with the \bold{same} regions used for parsing, since 
+all other positions are set to 0 and can produce artificially low read counts.
+
+\end{Details}
+%
+\begin{Value}
+S4 \code{DensityContainer}
+\end{Value}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+exbam<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="bam$")
+
+#store density maps of the whole sam/bam file in test_data
+exden.chip<-parseReads(exbam[2],verbose=0)
+
+#display basic information about the content of test.sam 
+exden.chip
+
+#all data are easily accessible
+test_stat<-tvStats(exden.chip)
+test_stat$origin
+
+# histogram of hwindow sized windows
+## Not run: histogram(exden.chip)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{peak2tss}{Changes the peak center to the next TSS according to previous annotation }{peak2tss}
+%
+\begin{Description}
+Sets the peak boundaries of an annotated \LinkA{GRanges}{GRanges.Rdash.class} object with peak locations to TSS centered ranges based on the transcript\_id column.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+peak2tss(peaks, gtf, peak_len=500)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{peaks}] 
+An annotated \LinkA{GRanges}{GRanges.Rdash.class} object with a meta data column `transcript\_id' and `exon\_id' like e.g. from \code{gtf2gr}.
+
+\item[\code{gtf}] 
+A \LinkA{GRanges}{GRanges.Rdash.class} object with a meta data column `transcript\_id' like e.g. from \code{annotatePeaks}.
+
+\item[\code{peak\_len}] 
+The desired total size of the region with the TSS located in the middle.
+
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+Convenience function to change the peak centers to TSS for e.g. plotting with \code{plotTV}.
+\end{Details}
+%
+\begin{Value}
+A \LinkA{GRanges}{GRanges.Rdash.class} object
+\end{Value}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+exgtf<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="gtf.gz$")[2]
+fn.macs<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="xls$")
+
+GTF<-gtf2gr(exgtf)
+peaks<-macs2gr(fn.macs,psize=500)
+
+peaks.anno<-annotatePeaks(peaks=peaks,gtf=GTF)
+
+peak2tss(peaks.anno, GTF, peak_len=500)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{plotTV}{Plot and cluster global read densities}{plotTV}
+%
+\begin{Description}
+Plotting facility for \code{DensityContainer}. 
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+plotTV( ..., regions, gtf=NA, scale="global", cluster="none", control = F, peak_windows = 0, ex_windows=100,
+		bin_method="mean", show_names=T, label_size=1, zero_alpha=0.5, colr=c("white","blue", "red"), 
+		colr_df="redgreen",	colour_spread=c(0.05,0.05), key_limit="auto", key_limit_rna="auto", 
+		set_zero="center", rowv=NA,	gclust="peaks", norm_readc=T, no_key=F, stranded_peak=T, 
+		ck_size=c(2,1), remove_lowex=0, verbose=1, showPlot=T, name_width=2, pre_mRNA=F)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{...}] 
+Depending on the combination of arguments and limited by the layout up to 20 \LinkA{DensityContainer}{DensityContainer.Rdash.class} and maximally one \code{matrix} can be supplied. The elements will be plotted in the order they were passed with the expression profiles and the peak profiles on the right hand and the left hand side respectively. The spliced slot determines about the kind of plot. If a \code{matrix} is provided, it will be plotted as a heatmap.
+
+\item[\code{regions}] 
+\LinkA{GRanges}{GRanges.Rdash.class} object with uniformly sized regions used for plotting or character vector with IDs matching column `transcript\_id' in the GTF. 
+
+\item[\code{gtf}] 
+A \LinkA{GRanges}{GRanges.Rdash.class} object with a meta data column `transcript\_id' and `exon\_id' like e.g. from \code{gtf2gr}. 
+
+\item[\code{scale}] 
+A character string that determines the row scaling of the colors. Defaults to `global' which results in a global maximum and minimum read value to be plotted across experiments. Alternative is `individual' for individual scaling.
+
+\item[\code{cluster}] 
+Sets the clustering method of the read densities. Defaults to `none'. If an integer is passed, kmeans clustering will be performed with \code{cluster} defining the amount of clusters. A colour coded bar will be plotted to the left. For hierarchical clustering the options `hc\_sp' and `hc\_pe' for spearman or pearson correlation coefficient based distances respectively, or `hc\_rm' for distances based on row means are accepted and the results will be displayed as a dendrogram.
+
+\item[\code{control}] 
+A vector of \LinkA{DensityContainer}{DensityContainer.Rdash.class} objects, matching the order of experiments passed as a first argument. E.g. \code{plotTV(ex1.ChIP,ex2.ChIP,ex3.RNA\_KO,control=c(ex1.Input,ex2.Input,ex3.RNA\_WT)}. The content will be treated as background densities and subtracted from the matching experiment.
+
+\item[\code{show\_names}] 
+If \code{TRUE}, peak labels and transcript IDs will be displayed on the left and the right of the plot respectively. 
+
+\item[\code{label\_size}] 
+Font size of the row and axis labels.
+
+\item[\code{zero\_alpha}] 
+Determines the alpha level of the line indicating the zero point within the peaks.
+
+\item[\code{colr}] 
+A vector containing the 3 colors used for the lowest, middle and highest values respectively.  
+
+\item[\code{colr\_df}] 
+Determines the color in case a \code{matrix} is provided and uses \code{greenred(100)} from \pkg{gplots} by default. If changed, the arguments should be formatted analogous to \code{colr}.   
+
+\item[\code{colour\_spread}] 
+sets the distance of the maximum and minimum value to the saturation levels of the plot. The first value for the left side (Peak profiles) and the right for the expression plots. Can be used to adjust the contrast.
+
+\item[\code{key\_limit}] 
+If left at the default, the upper and lower saturation levels the peak profile colour keys will be automatically determined based on colour\_spread. Can be manually overridden by a numeric vector with upper and lower levels.
+
+\item[\code{key\_limit\_rna}] 
+If left at the default, the upper and lower saturation levels the transcript profile colour keys will be automatically determined based on colour\_spread. Can be manually overridden by a numeric vector with upper and lower levels.
+
+\item[\code{set\_zero}] 
+if set to an integer, it determines the zero point of the x axis below the plot. E.g. a value of 250 will scale the x-axis of a 500bp peak from -250 to +250.
+
+\item[\code{rowv}] 
+If a numeric vector is provided, no clustering will be performed and all rows will be ordered based on the values of this vector. Alternatively a TVResults object can be provided to reproduce previous k-means clustering. 
+ 
+\item[\code{peak\_windows}] 
+If set to an integer greater than 0, all binding profiles will be interpolated into this amount of windows by the method specified by \code{bin\_method}.
+
+\item[\code{ex\_windows}] 
+An integer that determines the amount of points at which the read densities of an expression experiment will get interpolated by the method specified by \code{bin\_method}.
+ 
+\item[\code{bin\_method}] 
+Specifies the function used to summarize the bins specified by nbins. Possible methods are `max', `mean', `median' or `approx' for linear interpolation. 
+
+\item[\code{gclust}] 
+If \code{cluster} is not set to `none', this character string determines the cluster group. If set to `expression' or `peaks', only the expression profile or peak profile data sets will be used to perform the clustering respectively. All data sets passed will be reordered based on the results of the clustering. If set to `both', all data sets will be treated as one matrix and clustered altogether.  
+
+\item[\code{norm\_readc}] 
+If set to \code{TRUE}, all sample groups will be normalized based on the map mass which is defined here as all mapped reads after quality filtering multiplied by their individual read length.
+
+\item[\code{no\_key}] 
+If \code{TRUE}, no color keys will be displayed.  
+
+\item[\code{stranded\_peak}] 
+If \code{TRUE} and strand informations are provided in \code{regions}, peak profiles will flipped if located on the negative strand.
+ 
+\item[\code{ck\_size}] 
+Determines the size of the colour key in the form \code{c(height,width)}
+ 
+\item[\code{remove\_lowex}] 
+Numeric that sets the threshold for the average read density per base pair for expression data sets. Transcripts not passing will be filtered out and a message will be displayed.
+ 
+\item[\code{verbose}] 
+Verbosity level
+ 
+\item[\code{showPlot}] 
+If \code{FALSE}, plotting will be suppressed and only the \LinkA{TVResults}{TVResults.Rdash.class} will be returned. 
+ 
+\item[\code{name\_width}] 
+Determines the width of the space for the peak and gene names.
+ 
+\item[\code{pre\_mRNA}] 
+All expression data will be plotted from the start of the first exon to the end of the last exon including all introns.
+ 
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+
+Plots a false color image using the \code{image} function similar to \code{heatmap.2} of \pkg{gplots} but based on read densities. 
+There are 2 different kind of plots, that can be combined or plotted individually: expression profiles and peak profiles. 
+\begin{itemize}
+
+\item{} "Peak profile plots": Peak profiles are plotted if a \LinkA{DensityContainer}{DensityContainer.Rdash.class} instance is supplied with the spliced slot set to \code{FALSE}. The image consists of color coded, optionally total read normalized read pileups as a stacked false color image with one peak per row. The size of the peaks is soleley relying on the genomic range passed with \code{peaks}. If strand information is available through \code{peaks}, all peaks on the reverse strand will be reversed.
+\item{} "Transcript profile plots": If the spliced slot of the respective \LinkA{DensityContainer}{DensityContainer.Rdash.class} is set to \code{TRUE}, an expression profile will be plotted. First, each expression profile will be normalized to the total amount of reads of the source BAM/SAM file and reduced to \code{ex\_windows} as calculated by the \code{approx} function. The optional clustering will then be performed and subsequently all expression profiles will be scaled across rows so that each row has a mean of zero and standard deviation of one.
+\item{} "Heatmap": Instead of a \LinkA{DensityContainer}{DensityContainer.Rdash.class} with spliced set to \code{TRUE}, one \code{matrix} can be provided. The data will be scaled analogous to `Expression profile plots' and plotted as a heatmap using the \code{image} command.
+\item{} "Mixed plots": If \LinkA{DensityContainer}{DensityContainer.Rdash.class} instances with spliced slot set to \code{TRUE} or a \code{matrix} are combined with \LinkA{DensityContainer}{DensityContainer.Rdash.class} with the spliced slot set to \code{FALSE}, the peak profiles will be plotted on the left and the expression plots will be plotted on the right. The \code{gclust} argument determines the clustered groups. 
+
+\end{itemize}
+
+\end{Details}
+%
+\begin{Value}
+Returns a \LinkA{TVResults}{TVResults.Rdash.class} class object with the results of the clustering.
+\end{Value}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+exbam<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="bam$")
+exls<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="xls$")
+
+exden.ctrl<-parseReads(exbam[1],verbose=0)
+exden.chip<-parseReads(exbam[2],verbose=0)
+
+peaks<-macs2gr(exls,psize=500)
+
+cluster_res<-plotTV(exden.chip,exden.ctrl,regions=peaks,cluster=5,norm_readc=FALSE,showPlot=FALSE)
+summary(cluster_res)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{plotTVData}{Summarize plotTV results}{plotTVData}
+\aliasA{plotTVData,TVResults}{plotTVData}{plotTVData,TVResults}
+\aliasA{plotTVData,TVResults-method}{plotTVData}{plotTVData,TVResults.Rdash.method}
+\aliasA{plotTVData-methods}{plotTVData}{plotTVData.Rdash.methods}
+%
+\begin{Description}
+
+plotTVData returns the ordering and clustering results as internally calculated by plotTV. 
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S4 method for signature 'TVResults'
+plotTVData(tvr)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{tvr}] 
+A \LinkA{TVResults}{TVResults.Rdash.class} object as returned by plotTV
+
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+
+If k-means or manual clustering was performed, row means per cluster will be returned in a data.frame. Otherwise row means over the whole data will be returned.
+
+\end{Details}
+%
+\begin{Value}
+Returns a \code{data.frame} of the clustering results with five columns: Position, Cluster, Sample, Average\_scores and Plot 
+\end{Value}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+%
+\begin{SeeAlso}
+\begin{itemize}
+
+\item{} \LinkA{TVResults-class}{TVResults.Rdash.class}.
+
+\end{itemize}
+
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+exbam<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="bam$")
+exls<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="xls$")
+
+exden.ctrl<-parseReads(exbam[1],verbose=0)
+exden.chip<-parseReads(exbam[2],verbose=0)
+
+peaks<-macs2gr(exls,psize=500)
+
+cluster_res<-plotTV(exden.chip,exden.ctrl,regions=peaks,cluster=5,norm_readc=FALSE,showPlot=FALSE)
+summaryTV(cluster_res)
+tvdata<-plotTVData(cluster_res)
+
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{rmTV}{Free space occupied by DensityContainer}{rmTV}
+\aliasA{rmTV,DensityContainer-method}{rmTV}{rmTV,DensityContainer.Rdash.method}
+\aliasA{rmTV-methods}{rmTV}{rmTV.Rdash.methods}
+%
+\begin{Description}
+Free space occupied by DensityContainer
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S4 method for signature 'DensityContainer'
+rmTV(dc)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{dc}] 
+An object of class \LinkA{DensityContainer}{DensityContainer.Rdash.class}.
+
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+None
+\end{Value}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+exbam<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="bam$")
+
+#store density maps of the whole sam/bam file in test_data
+exden.chip<-parseReads(exbam[2])
+
+rmTV(exden.chip)
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{slice1}{Slice read densities from a TransView dataset}{slice1}
+\aliasA{slice1,DensityContainer,character,numeric,numeric-method}{slice1}{slice1,DensityContainer,character,numeric,numeric.Rdash.method}
+\aliasA{slice1-methods}{slice1}{slice1.Rdash.methods}
+\aliasA{sliceN}{slice1}{sliceN}
+\aliasA{sliceN,DensityContainer-method}{slice1}{sliceN,DensityContainer.Rdash.method}
+\aliasA{sliceN-methods}{slice1}{sliceN.Rdash.methods}
+%
+\begin{Description}
+
+slice1 returns read densities of a genomic interval. sliceN takes a GRanges object or a data.frame with 
+genomic coordinates and returns a list of read densities. 
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S4 method for signature 'DensityContainer,character,numeric,numeric'
+slice1(dc, chrom, start, end, control=FALSE, input_method="-",treads_norm=TRUE, nbins=0, bin_method="mean")
+## S4 method for signature 'DensityContainer'
+sliceN(dc, ranges, toRle=FALSE, control=FALSE, input_method="-",treads_norm=TRUE, nbins=0, bin_method="mean")
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{dc}] 
+Source \LinkA{DensityContainer}{DensityContainer.Rdash.class} object
+
+\item[\code{chrom}] 
+A case sensitive string of the chromosome
+
+\item[\code{start}, \code{end}] 
+Genomic start and end of the slice
+
+\item[\code{ranges}] 
+A \LinkA{GRanges}{GRanges.Rdash.class} object or a data.frame. 
+ 
+\item[\code{toRle}] 
+The return values will be converted to a \code{RleList}. 
+
+\item[\code{control}] 
+An optional \LinkA{DensityContainer}{DensityContainer.Rdash.class} which will used as control and by default subtracted from \code{dc}.
+
+\item[\code{input\_method}] 
+Defines the handling of the optional control \LinkA{DensityContainer}{DensityContainer.Rdash.class}. `-' will subtract the control from the actual data and `/' will return log2 fold change ratios with an added pseudo count of 1 read.
+
+\item[\code{treads\_norm}] 
+If \code{TRUE}, the input densities are normalized to the read counts of the data set. Should not be used if one of the \code{DensityContainer} objects does not contain the whole amount of reads by e.g. placing a filter in \code{parseReads}. 
+
+\item[\code{nbins}] 
+If all input regions have equal length and nbins greater than 0, all densities will be summarized using the method specified by bin\_method into nbins windows of approximately equal size. 
+
+\item[\code{bin\_method}] 
+Character string that specifies the function used to summarize or expand the bins specified by nbins. Valid methods are `max', `mean' or `median'.
+
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+
+slice1 is a fast method to slice a vector of read densities from a \LinkA{DensityContainer}{DensityContainer.Rdash.class} object.
+The vector can be optionally background subtracted. If the query region exceeds chromosome boundaries 
+or if an non matching chromosome name will be passed, a warning will be issued and a NULL vector will be returned.
+
+\code{sliceN} returns a list with N regions corresponding to N rows in the \LinkA{GRanges}{GRanges.Rdash.class} object or the data.frame. A list with the 
+corresponding read densities will be returned and row names will be conserved. Optionally 
+the return values can be converted to a \code{RleList} for seamless integration into the 
+\pkg{IRanges} package.
+
+\end{Details}
+%
+\begin{Value}
+slice1 returns a numeric vector of read densities
+sliceN returns a list of read densities and optionally an \code{RleList}
+\end{Value}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+%
+\begin{SeeAlso}
+\begin{itemize}
+
+\item{} \code{\LinkA{slice1T}{slice1T}}.
+\item{} \LinkA{DensityContainer-class}{DensityContainer.Rdash.class}.
+
+\end{itemize}
+
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+exbam<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="bam$")
+exls<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="xls$")
+
+#store density maps of the whole sam/bam file in test_data
+exden.ctrl<-parseReads(exbam[1],verbose=0)
+exden.chip<-parseReads(exbam[2],verbose=0)
+
+peaks<-macs2gr(exls,psize=500)
+
+#returns vector of read counts per base pair
+slice1(exden.chip,"chr2",30663080,30663580)[300:310]
+slice1(exden.ctrl,"chr2",30663080,30663580)[300:310]
+slice1(exden.chip,"chr2",30663080,30663580,control=exden.ctrl,treads_norm=FALSE)[300:310]
+
+xout<-sliceN(exden.chip,ranges=peaks)
+lapply(xout,function(x)sum(x)/length(x))
+xout<-sliceN(exden.ctrl,ranges=peaks)
+lapply(xout,function(x)sum(x)/length(x))
+xout<-sliceN(exden.chip,ranges=peaks,control=exden.ctrl,treads_norm=FALSE)
+lapply(xout,function(x)sum(x)/length(x))
+
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{slice1T}{Slice read densities of whole transcripts from a TransView DensityContainer}{slice1T}
+\aliasA{slice1T,DensityContainer,character-method}{slice1T}{slice1T,DensityContainer,character.Rdash.method}
+\aliasA{slice1T-methods}{slice1T}{slice1T.Rdash.methods}
+\aliasA{sliceNT}{slice1T}{sliceNT}
+\aliasA{sliceNT,DensityContainer,character-method}{slice1T}{sliceNT,DensityContainer,character.Rdash.method}
+\aliasA{sliceNT-methods}{slice1T}{sliceNT.Rdash.methods}
+%
+\begin{Description}
+
+slice1T returns read densities of a transcript. sliceNT takes the output of with 
+genomic coordinates and returns a list of read densities. 
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S4 method for signature 'DensityContainer,character'
+slice1T(dc, tname,  gtf, control=FALSE, input_method="-", concatenate=T, stranded=T, treads_norm=T, nbins=0, bin_method="mean")
+## S4 method for signature 'DensityContainer,character'
+sliceNT(dc, tnames,  gtf, toRle=FALSE, control=FALSE, input_method="-", concatenate=T, stranded=T, treads_norm=T, nbins=0, bin_method="mean")
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{dc}] 
+Source \LinkA{DensityContainer}{DensityContainer.Rdash.class} object
+
+\item[\code{tname}, \code{tnames}] 
+A character string or a character vector with matching identifiers of the provided gtf
+
+\item[\code{gtf}] 
+A \LinkA{GRanges}{GRanges.Rdash.class} object with a meta data column `transcript\_id' and `exon\_id' like e.g. from \code{gtf2gr}. 
+
+\item[\code{toRle}] 
+The return values will be converted to a \code{RleList}. 
+
+\item[\code{control}] 
+An optional \LinkA{DensityContainer}{DensityContainer.Rdash.class} which will used as control and by default subtracted from \code{dc}.
+
+\item[\code{input\_method}] 
+Defines the handling of the optional control \LinkA{DensityContainer}{DensityContainer.Rdash.class}. `-' will subtract the control from the actual data and `/' will return log2 fold change ratios with an added pseudo count of 1 read.
+
+\item[\code{concatenate}] 
+Logical that determines whether exons will be concatenated to one numeric vector (default) or returned as a list of vectors per exon.
+
+\item[\code{stranded}] 
+If TRUE, the resulting vector will be reversed for reads on the reverse strand.
+
+\item[\code{treads\_norm}] 
+If \code{TRUE}, the input densities are normalized to the read counts of the data set. Should not be used if one of the \code{DensityContainer} objects does not contain the whole amount of reads by e.g. placing a filter in \code{parseReads}. 
+
+\item[\code{nbins}] 
+If all input regions have equal length and nbins greater than 0, all densities will be summarized using the method specified by bin\_method into nbins windows of approximately equal size. 
+
+\item[\code{bin\_method}] 
+Character string that specifies the function used to summarize or expand the bins specified by nbins. Valid methods are `max', `mean' or `median'.
+
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+\code{slice1T} and \code{sliceNT} provide a convenient method to access the read densities from a \LinkA{DensityContainer}{DensityContainer.Rdash.class}
+of spliced reads. The transcript structure will be constructed based on the provided gtf information.
+
+slice1T is a fast alternative to sliceNT to slice one vector of read densities corresponding 
+to the structure of one transcript and reads can be optionally background subtracted.
+If the query region exceeds chromosome boundaries or if an non matching chromosome name will be
+passed, a warning will be issued and a NULL vector will be returned.
+
+sliceN slices N regions corresponding to N rows in the range GRanges object. A list with the 
+corresponding read densities will be returned and row names will be conserved. Optionally 
+the return values can be converted to a \code{RleList} for seamless integration into the 
+\pkg{IRanges} package.
+
+\end{Details}
+%
+\begin{Value}
+slice1T returns a numeric vector of read densities
+sliceNT returns a list of read densities and optionally an \code{RleList}
+\end{Value}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+library("pasillaBamSubset")
+
+exgtf<-dir(system.file("extdata", package="TransView"),full=TRUE,patt="gtf.gz$")[1]
+fn.pas_paired<-untreated1_chr4()
+
+exden.exprs<-parseReads(fn.pas_paired,spliced=TRUE,verbose=0)
+
+GTF.dm3<-gtf2gr(exgtf)
+
+slice1T(exden.exprs,tname="NM_001014688",gtf=GTF.dm3,concatenate=FALSE)
+
+my_genes<-sliceNT(exden.exprs,unique(mcols(GTF.dm3)$transcript_id[101:150]),gtf=GTF.dm3)
+lapply(my_genes,function(x)sum(x)/length(x))
+
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{TVResults-class}{Class \code{"TVResults"}}{TVResults.Rdash.class}
+\aliasA{class:TVResults}{TVResults-class}{class:TVResults}
+\aliasA{clusters}{TVResults-class}{clusters}
+\aliasA{clusters,TVResults-method}{TVResults-class}{clusters,TVResults.Rdash.method}
+\aliasA{cluster\_order}{TVResults-class}{cluster.Rul.order}
+\aliasA{cluster\_order,TVResults-method}{TVResults-class}{cluster.Rul.order,TVResults.Rdash.method}
+\aliasA{parameters}{TVResults-class}{parameters}
+\aliasA{parameters,TVResults-method}{TVResults-class}{parameters,TVResults.Rdash.method}
+\aliasA{scores\_peaks}{TVResults-class}{scores.Rul.peaks}
+\aliasA{scores\_peaks,TVResults-method}{TVResults-class}{scores.Rul.peaks,TVResults.Rdash.method}
+\aliasA{scores\_rna}{TVResults-class}{scores.Rul.rna}
+\aliasA{scores\_rna,TVResults-method}{TVResults-class}{scores.Rul.rna,TVResults.Rdash.method}
+\aliasA{show,TVResults-method}{TVResults-class}{show,TVResults.Rdash.method}
+\aliasA{summaryTV}{TVResults-class}{summaryTV}
+\aliasA{summaryTV,TVResults-method}{TVResults-class}{summaryTV,TVResults.Rdash.method}
+\keyword{classes}{TVResults-class}
+%
+\begin{Description}
+Container holding the results of a call to \code{plotTV()}.
+\end{Description}
+%
+\begin{Section}{Objects from the Class}
+Objects are created by the function \code{plotTV()} using an internal constructor.
+\end{Section}
+%
+\begin{Section}{Accessors}
+tvr represents a \code{"TVResults"} instance in the following
+\begin{description}
+
+\item[\code{parameters(tvr)}:] Holds all parameters used to call plotTV 
+\item[\code{clusters(tvr)}:] Returns numeric vector with the clsuter of each cluster.
+\item[\code{cluster\_order(tvr)}:] Ordering of the rows within the original regions passed to plotTV with regard to the clusters.
+\item[\code{scores\_peaks(tvr)}:] Scores of the peaks. Corresponds to the values within the plot after interpolation and normalization.
+\item[\code{scores\_rna(tvr)}:] Scores of the transcripts. Corresponds to the values within the plot after interpolation and normalization.
+\item[\code{summaryTV(tvr)}:] Returns a data frame with the clustering results of the internal data.
+
+\end{description}
+
+\end{Section}
+%
+\begin{Section}{Convenience Methods}
+\begin{description}
+
+\item[plotTVData] \code{signature(tvr = "TVResults")}: Returns a data frame with summarized clustering results.
+
+\end{description}
+
+\end{Section}
+%
+\begin{Note}
+Not all slots are currently being exported.
+\end{Note}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+%
+\begin{SeeAlso}
+\code{\LinkA{plotTVData-methods}{plotTVData.Rdash.methods}}
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+showClass("TVResults")
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{tvStats-methods}{ DensityContainer accessor function }{tvStats.Rdash.methods}
+\aliasA{tvStats}{tvStats-methods}{tvStats}
+\aliasA{tvStats,DensityContainer-method}{tvStats-methods}{tvStats,DensityContainer.Rdash.method}
+\keyword{methods}{tvStats-methods}
+%
+\begin{Description}
+Retrieve important metrics from the outcome of \code{parseReads()} stored in class DensityContainer and its super classes.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S4 method for signature 'DensityContainer'
+tvStats(dc)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+
+\begin{ldescription}
+\item[\code{dc}] 
+An object of class \LinkA{DensityContainer}{DensityContainer.Rdash.class}.
+
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Returns a \code{list} with the slots of the DensityContainer and its super classes.
+In detail:
+\begin{itemize}
+
+
+\item{} "ex\_name": A user provided string to define a name of this dataset
+\item{} "origin": Filename of the original file
+\item{} "spliced": Should the class be treated like an RNA-Seq experiment for e.g. plotTV?
+\item{} "paired": Does the source file contain reads with proper pairs? 
+\item{} "readthrough\_pairs": If TRUE, paired reads will be connected from left to right as one long read.
+\item{} "filtered": Is there a range filter in place? If yes, slicing should be \bold{only} conducted using the same filter!!
+\item{} "strands": Which strands were parsed at all. Can be "+", "-" or "both"
+\item{} "nreads": Total number of reads
+\item{} "coverage": Total coverage computed by total map mass/(chromosome end - chromosome start). Chromosome length derived from the SAM/BAM header
+\item{} "maxScore": Maximum read pileup found in file
+\item{} "lowqual": Amount of reads that did not pass the quality score set by min\_quality or were not mapped
+\item{} "paired\_reads": Amount of reads having multiple segments in sequencing
+\item{} "proper\_pairs": Amount of pairs with each segment properly aligned according to the aligner
+\item{} "collapsed": If maxDups is in place, the reads at the same position and strand exceeding this value will be counted here.
+\item{} "compression": Size of a gap triggering an index event
+\item{} "chromosomes": Character string with the chromosomes with reads used for map construction
+\item{} "filtered":\_reads Amount of reads
+\item{} "pos": Reads used from the forward strand
+\item{} "neg": Reads used from the reverse strand
+\item{} "lcoverage": Local coverage which is computed by filtered map mass/covered region
+\item{} "lmaxScore": Maximum score of the density maps
+\item{} "size": Size in bytes occupied by the object
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Author}
+Julius Muller \email{ju-mu@alumni.ethz.ch}
+\end{Author}
+\printindex{}
+\end{document}
