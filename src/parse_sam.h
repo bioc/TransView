@@ -1,9 +1,20 @@
 
 #pragma once
 
-#include <samtools-1.7-compat.h>
-#include "construct_dc.h"
+#include <R.h>
+#include <Rinternals.h>
+#include <R_ext/Print.h>  // Ensures Rprintf is properly defined
 #include <stddef.h>
+
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat"
+
+#include <samtools-1.7-compat.h>
+
+#pragma GCC diagnostic pop
+
+#include "construct_dc.h"
 
 #define bam1_ppair(b) (((b)->core.flag&BAM_FPROPER_PAIR) != 0)
 #define bam1_pair(b) (((b)->core.flag&BAM_FPAIRED) != 0)

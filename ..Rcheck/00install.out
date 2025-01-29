@@ -1,0 +1,20 @@
+* installing *source* package ‘TransView’ ...
+** this is package ‘TransView’ version ‘1.50.1’
+** using staged installation
+** libs
+using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0’
+make: Nothing to be done for 'all'.
+make: 'symbols.rds' is up to date.
+installing to /home/rstudio/TransView/..Rcheck/00LOCK-TransView/00new/TransView/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (TransView)

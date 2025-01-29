@@ -202,7 +202,7 @@ void print_readinfo(seq_block_t *bresults,bam1_t *current_read,read_metrics_t *r
 	Rprintf("\nREADING %d\n",bresults->total_reads);
 	Rprintf("Chrom %s\n",bam_file->header->target_name[current_read->core.tid]);
 	Rprintf("Pos %lld\n", (long long)current_read->core.pos);
-	Rprintf("Len %d -> END: %lld\n", rm.read_length, (long long)(rm.read_length + current_read->core.pos));
+	Rprintf("Len %d -> END: %lld\n", rm->read_length, (long long)(rm->read_length + current_read->core.pos));
 	Rprintf("REVCOMP: %d\n",rm->revcomp);
 	Rprintf("SKIP: %d\n",rm->skip);
 	Rprintf("mapq: %d\n",*bam1_qual(current_read));
