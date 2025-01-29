@@ -1,0 +1,107 @@
+
+R Under development (unstable) (2025-01-20 r87609) -- "Unsuffered Consequences"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> 
+> 
+> require("TransView") || stop("unable to load TransView package")
+Loading required package: TransView
+Loading required package: GenomicRanges
+Loading required package: stats4
+Loading required package: BiocGenerics
+Loading required package: generics
+
+Attaching package: 'generics'
+
+The following objects are masked from 'package:base':
+
+    as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,
+    setequal, union
+
+
+Attaching package: 'BiocGenerics'
+
+The following objects are masked from 'package:stats':
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from 'package:base':
+
+    Filter, Find, Map, Position, Reduce, anyDuplicated, aperm, append,
+    as.data.frame, basename, cbind, colnames, dirname, do.call,
+    duplicated, eval, evalq, get, grep, grepl, is.unsorted, lapply,
+    mapply, match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+    rank, rbind, rownames, sapply, saveRDS, table, tapply, unique,
+    unsplit, which.max, which.min
+
+Loading required package: S4Vectors
+
+Attaching package: 'S4Vectors'
+
+The following object is masked from 'package:utils':
+
+    findMatches
+
+The following objects are masked from 'package:base':
+
+    I, expand.grid, unname
+
+Loading required package: IRanges
+Loading required package: GenomeInfoDb
+Welcome to TransView version 1.50.1
+
+Attaching package: 'TransView'
+
+The following object is masked from 'package:GenomicRanges':
+
+    pos
+
+The following object is masked from 'package:IRanges':
+
+    pos
+
+The following object is masked from 'package:BiocGenerics':
+
+    pos
+
+[1] TRUE
+> TransView:::.test()
+Version 2.09+ detected
+21 peaks matching
+172 rows matching
+2862 rows matching
+Successful annotation within -10kBps to 10kBps: 21, NA peaks without hit
+Successful annotation within -5kBps to 2kBps: NA, 21 peaks without hit
+Successful annotation within -5kBps to 2kBps: 10, 11 peaks without hit
+Successful annotation within -10kBps to 10kBps: 21, NA peaks without hit
+
+
+RUNIT TEST PROTOCOL -- Wed Jan 29 15:22:35 2025 
+*********************************************** 
+Number of test functions: 9 
+Number of errors: 0 
+Number of failures: 0 
+
+ 
+1 Test Suite : 
+TransView RUnit Tests - 9 test functions, 0 errors, 0 failures
+Number of test functions: 9 
+Number of errors: 0 
+Number of failures: 0 
+> 
+> proc.time()
+   user  system elapsed 
+  2.730   0.241   2.858 
